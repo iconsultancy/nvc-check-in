@@ -1,6 +1,6 @@
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="nl.iconsultancy.iNVCcheckin" version="1.62">
-  <name>NVC Check-In</name>
-  <description>NVC Check In app that supports the use and spread of NVC</description>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="nl.iconsultancy.iGCCheckIn" version="1.62">
+  <name>iGCCheckIn</name>
+  <description>Dutch NVC Check In app that supports the use and spread of NVC</description>
   <author href="http://www.vitaliserendcommuniceren.nl/school/tools.html" email="apps@iconsultancy.nl">iConsultancy (Martijn Ceelen)</author>
   <content src="index.html"/>
   <preference name="DisallowOverscroll" value="true"/>
@@ -26,7 +26,7 @@
   <plugin name="cordova-plugin-statusbar" source="npm" spec="~2.1.2"/>
   <plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0"/>
   <plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1"/ -->
-  <icon src="iNVCCheckInNVCen.png"/>
+  <icon src="iNVCCheckInNVCnl.png"/>
   <gap:splash src="SplashWelcome.png"/>
   <!-- platform name="android">
     <icon src="www/res/icon/android/drawable-ldpi-icon.png" density="ldpi"/>
