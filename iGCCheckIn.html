@@ -1,0 +1,1485 @@
+<html>
+<head>
+<title>NVC Check-In.... (1.50nl test, coming soon to the App store!)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+
+<script src="/mint/?js" type="text/javascript"></script>
+
+<script src="phonegap.js" type="text/javascript" 
+charset="utf-8"></script>
+
+<script language="javascript" type="text/javascript">
+
+window.open;
+window.scrollTo(0,0);
+resizeTo(320+35,480+135);
+
+var author="Martijn Ceelen";
+var appVersion="1.50";
+var db = openDatabase("iNVCdb", "1.0", "iNVCDatabase", 65536);
+var strLog ='';
+var DFReferenceVersion = false;
+var DFAssistedVersion = false;
+</script>
+
+<link rel="apple-touch-icon" href="iNVCCheckInNVCnl.png" />
+
+<link rel="apple-touch-icon-precomposed" href="iNVCCheckInNVCnl.png" />
+
+<script src="NVCnl.js" type="text/javascript" 
+charset="utf-8"></script>
+<!--script src="DFSEen.js" type="text/javascript"></script>
+<script src="DF.js" type="text/javascript"></script-->
+
+<script language="javascript" type="text/javascript">
+document.write(getMaps());
+</script>
+
+<script language="javascript" type="text/javascript">
+
+var addthis_config = {
+    username: 'iconsultancy',
+    services_compact: 'twitter',
+    services_expanded: 'twitter'
+}
+var addthis_share = 
+{ 
+// ...
+   templates: {
+                  twitter: 'check out {{url}} (from @martijnceelen)'
+              }
+}
+
+var selectedRow;
+var pos=0;
+var spos=0;
+var sscroll=true;
+var msg= /* "iPhone GC App */  ".... ("
++appVersion+appLanguage+msgComingSoon;
+
+function toggleScroll()
+{
+   if (sscroll)
+   {
+      sscroll = false;
+      alert('scrolling turned off for: '+getSentence());
+   }
+   else
+   {
+       sscroll = true;
+       alert('scrolling turned on for: '+getSentence());
+   }
+}
+
+function scroll()
+{
+    var s = getSentence() 
++ '                        ';
+    document.title= appName + ' ' +
+       msg.substring(pos,msg.length)+
+       msg.substring(0,pos);
+if (sscroll)
+document.getElementById('sentence').innerHTML = getModePicture() +"<br/><div onclick='toggleScroll();'>"
++(s.substring(spos,s.length)+
+ s.substring(0,spos)).substring(0,25)
++'</div>';
+   pos=(pos+1)%msg.length;
+   spos=(spos+1)%s.length;
+}
+
+function scrollNu()
+{
+   setInterval("scroll()",100);   
+}
+
+function lokatie()
+{
+  var strReturn = "internet";
+  var uagent = navigator.userAgent.toLowerCase();
+
+  if (location.href.indexOf('var/mobile') != -1) 
+     strReturn = 'iphone';
+  
+  if (uagent.search('android') > -1)
+     strReturn= 'android';
+  
+  return strReturn   
+/* var/mobile : iphone */
+/* iGCCheckIn.app/www : iphone installed */
+}
+
+function checkLocation()
+{
+if (lokatie() == 'internet')
+{
+  if (location.href.indexOf('vitaliserend') == -1) 
+  alert('Please do not copy code from original site, contact ceelen@iconsultancy for use or distribution agreement');  
+}
+else /* Mobiel */
+{
+}
+}
+
+function delay(msecs)
+{
+    var today = new Date();
+    var initialTime = today.getTime();
+    // alert(initialTime);
+    for (currentTime=initialTime;
+          (currentTime < 
+             initialTime+msecs);
+          currentTime=
+             (new Date ()).getTime());
+
+    // alert(currentTime-initialTime);
+//   for (i=1;i<(msecs/25)*10000;i++);
+/*    alert("delay 25s=10Mincs, "+
+            "beter via time passed check");
+*/
+}
+
+
+function initNVCapp()
+{
+checkLocation();
+delay(6*1000);
+setTimeout("scrollNu()", /* 500 */ 0  ); 
+}
+
+function finishInitHtmlNVCapp()
+{
+setModePicture();
+}
+
+initNVCapp();
+
+var startTime;
+var stopTime;
+var intervalTimerIdReminder;
+
+var state = "I";
+var previousState = "I";
+
+function initoption(choice)
+{
+   return ("<option>" +  
+         choice + "</option>");
+}
+
+function initselect(choices)
+{
+   var index=0;
+   var strReturn="";
+
+   for (index=0;        
+         index<choices.length;
+         index++)
+   {
+      strReturn = strReturn +   initoption(
+         choices[index]);
+   }
+   return strReturn; 
+}
+
+function selectedValue(select)
+{
+   return select.options[select.selectedIndex].text;
+}
+    
+function getFeeling()
+{
+   var strReturn = "";
+   if (form1.selectfeeling.selectedIndex>0)
+      strReturn = strReturn +
+       selectedValue(form1.selectfeeling);
+/*feelings[startFeelings+indexGevoel]*/
+
+   if (form1.selectfeeling2.selectedIndex>0)
+      strReturn = strReturn + " " +
+    selectedValue(form1.selectfeeling2);
+/*    
+feelings2[startFeelings2+indexGevoel2]*/
+   if ((form1.selectfeeling.selectedIndex+
+form1.selectfeeling2.selectedIndex)
+==0)
+    strReturn = strReturn + getFeelingUndefinedText();
+
+   return strReturn;
+}
+
+function setinput(select,text)
+{
+   if (text!='undefined')
+      select.value=text;
+}
+
+function setselect(select,choice)
+{
+   var index=2;
+   for (index=0;        
+         index<select.options.length;
+         index++)
+   {
+      if (select.options[index].text  
+         == choice) 
+      break;
+   }
+   if (index<select.options.length) 
+      select.selectedIndex = index
+   else
+      select.selectedIndex = 0;
+}
+
+function formatFooString(fooString)
+{
+   var lineWidth = 23;
+   var returnString=fooString;
+/* todo bijstellen als uppercase */
+   if (fooString.length < lineWidth)
+      returnString = fooString + '<br/><br/><br/>';
+   else
+   if (fooString.length < 1.3 * lineWidth)
+      returnString = fooString + '<br/><br/><br/>';       
+   return returnString;
+}
+
+function setAddThisShare()
+{
+addthis_share = 
+{ 
+// ...
+   url: ''+getWebsiteToShare(),
+   username: ''+'iconsultancy',
+   description: ''+getSentence(),
+   title: 'generated by an app: '+appName,
+/*   templates: {
+                  twitter: ''+ getSentence()+' {{url}}'
+              } */
+   templates: {
+                  twitter: ''+ getSentence()+' #'+appTwitterTag
+              } 
+};
+}
+
+function beep()
+{
+try {
+  navigator.notification.beep();
+} catch(e) {
+  // alert("no equivalent in web app");
+}
+}
+
+function vibrate()
+{
+try {
+  navigator.notification.vibrate();
+} catch(e) {
+  // no equivalent in web app
+}
+}
+
+function nativeAlert(msg,title,buttonText)
+{
+try {
+  navigator.notification.alert(msg,       
+                          title,buttonText);
+} catch(e) {
+  // no equivalent in web app
+  alert(msg);
+}
+}
+
+function signalReminder()
+{
+   vibrate();
+   beep();
+ setTimeout("alert(getSentence())",
+2000);
+}
+
+function setReminder()
+{
+   var reminderTime;
+   // alert('start reminder!');
+   reminderTime=parseInt(prompt( 'Remind me of connecting sentence, every (number of minutes) : ', 2));
+   // alert(reminderTime);
+   if (reminderTime != NaN 
+&& reminderTime > 0)
+      intervalTimerIdReminder = setInterval("signalReminder()",reminderTime*60000);
+}
+
+function getSavedPage()
+{ var strReturn='';
+/*   addthis.init(); */
+   strReturn=strReturn
++ '<br/>'
++"<a href='" +'http://mobile.twitter.com/home?status='+getSentence()+'%20%23'+appTwitterTag
++"'><img src='tweetbutton100x50.jpg'></a>"
++"<a href='" +'http://api.addthis.com/oexchange/0.8/forward/linkedin/offer?url='
++addthis_share.url
++'&description='
++addthis_share.description
++'&title='
++addthis_share.title
++'&username='
++addthis_share.username
++"'><img src='linkedinsharebutton100x50.jpg'></a>"
++ '<br/>'
++ 'or periodically remind yourself:'
++ '<br/>'
++ '<div style="color:white;">..'
++"<img src='wekker.jpg' height='50' onclick='setReminder()'></div>"
++"<!-- a href='" +'http://api.addthis.com/oexchange/0.8/forward/facebook/offer?url='
++addthis_share.url
++'&description='
++addthis_share.description
++'&title='
++addthis_share.title
++'&username='
++addthis_share.username
++"'><img src='facebooksharebutton100x50.jpg'></a -->"
++ '<br/>';
+   return(''+getSavedText()+strReturn);
+/* http://api.addthis.com/oexchange/0.8/forward/facebook/offer?url=http://addthis.com */
+}
+
+
+function getSentence()
+{
+if (form1 == 'undefined' || form1.inputneed == 'undefined')
+  return '';
+else 
+   return ( getStartObservation() 
++selectedValue(form1.selectobservation)
+/* +observations[startObservations+indexWaarneming]
+*/
++getStartObservationValue()
++form1.inputobservation.value
++', '
++getStartFeeling()
++getFeeling()
++' '
++form1.inputfeeling.value
++', '
++getStartNeed()
++selectedValue(form1.selectneed)
+/* needs[startNeeds+indexBehoefte] */
++' '
++form1.inputneed.value
++'. '
++selectedValue(form1.selectrequest)
+/*
++requests[startRequests+indexVerzoek]
+*/
++' '
++form1.inputrequest.value
++'?');
+}
+
+function getMailTo()
+{  
+   var strReturn;
+ 
+   logSentence();
+   strReturn='mailto:?subject=' 
++getMailToSubject()
++'&Body='+getSentence()
++' Generated by an iphone NVC app at:  ';
+
+if (lokatie() == 'internet')
+{
+strReturn= strReturn
++escape(location.href);
+}
+else
+{
+strReturn= strReturn
++getWebsiteToShare();
+}
+return strReturn; 
+}
+
+function getMailToWebMaster()
+{
+   return ('mailto:ceelen@iconsultancy.nl?subject=NVCAppFeedback&Body='
++getWebMasterText() 
++' Generated by an iphone NVC app ('
++appName+', '
++appVersion
++appLanguage
++') at:  '
++escape(location.href)) 
+}
+
+function getMailToLogBook(logString)
+{  
+   var strReturn;
+ 
+   strReturn='mailto:?subject=NVCLogBook'
++'&Body='+logString
++' Generated by an iphone NVC app at:  ';
+
+if (lokatie() == 'internet')
+{
+strReturn= strReturn
++escape(location.href);
+}
+else
+{
+strReturn= strReturn
++getWebsiteToShare();
+}
+return strReturn; 
+}
+
+function getCoProductionOf()
+{
+   return (getCoProductionText()+"<br>- <a style='color: blue; text-decoration: underline' href='http://iconsultancypress.wordpress.com/'>iConsultancy</a> (Martijn Ceelen)<br>- <a style='color: blue; text-decoration: underline' href='http://www.ai-opener.nl'>Ai-opener</a> (Martin vd Meulen) <br>- <a style='color: blue; text-decoration: underline' href='http://www.4ring.nl'>4Ring</a> (Beatrice Nattermuller)<br>"+getUsingNVCText()+" Marshall Rosenberg <a style='color: blue; text-decoration: underline' href='http://www.cnvc.org'>CNVC</a>. <br/><br/>"+getMailQuestionsText()+" <a style='color: blue; text-decoration: underline' href='javascript:location.href=getMailToWebMaster()'>appmaster</a>.");
+}
+
+function createRequestObject() {
+ var ajaxRequest;
+try{
+  ajaxRequest = new XMLHttpRequest(); 
+}
+catch (e) {
+  try{
+    ajaxRequest = new ActiveObject("Msxm12.XMLHTTP"); 
+  }
+  catch (e) {
+    try{
+      ajaxRequest = new 
+ActiveObject("Microsoft.XMLHTTP"); 
+    }
+    catch (e) {
+    }
+  }
+}
+  return ajaxRequest;
+}
+
+function postAjaxRequest(aRequest)
+{
+  aRequest.open("POST", "http://www.vitaliserendcommuniceren.nl/index.htm", true);
+  aRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+aRequest.send("gevoel="+"Blij",true);
+}
+
+function logAjaxRequest()
+{
+}
+
+function initSentence()
+{
+   form1.inputobservation.value = '...';
+   form1.inputfeeling.value = '';
+   form1.inputneed.value = '';
+   form1.inputrequest.value = ''; 
+  form1.selectobservation.selectedIndex = 0;
+  form1.selectfeeling.selectedIndex 
+= 0;
+  form1.selectfeeling2.selectedIndex = 0;
+  form1.selectneed.selectedIndex 
+= 0;
+  form1.selectrequest.selectedIndex = 0;
+/* if (sentenceIsEmpty()) alert('ois empty');
+alert('end init sentence'); */
+}
+
+function sentenceIsEmpty()
+{
+   boolReturn = false;
+   if ((form1.inputobservation.value == '...')
+     &&
+ (form1.inputfeeling.value == '')
+     &&
+ (form1.inputneed.value == '')
+     &&
+ (form1.inputrequest.value == '')
+     && 
+ (form1.selectobservation.selectedIndex == 0)
+     &&
+   (form1.selectfeeling.selectedIndex 
+== 0)
+     &&
+   (form1.selectfeeling2.selectedIndex == 0)
+     &&
+   (form1.selectneed.selectedIndex 
+== 0)
+     &&
+   (form1.selectrequest.selectedIndex == 0))
+   {
+     // alert('ois empty');
+     boolReturn = true;
+   }
+   return boolReturn;
+}
+
+function logSentence()
+{
+  if (sentenceIsEmpty())
+      return;
+//  alert('saving sentence');
+  db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"CREATE TABLE IF NOT EXISTS " + "entries " +
+"(id INTEGER NOT NULL PRIMARY " + "KEY AUTOINCREMENT, " 
++ "date DATE NOT NULL, "
++ "appname TEXT NOT NULL, "
++ "appversion TEXT NOT NULL, "
++ "sentence TEXT NOT NULL, "
++ "observation TEXT NULL, "
++ "observationextra TEXT NULL, "
++ "feelingok TEXT NULL, "
++ "feelingnotok TEXT NULL, "
++ "feelingcustom TEXT NULL, "
++ "need TEXT NULL, "
++ "needcustom TEXT NULL, "
++ "request TEXT NULL, "
++ "requestextra TEXT NULL, "
++ "free1 TEXT NULL, "
++ "free2 TEXT NULL, "
++ "free3 TEXT NULL);");
+      }
+  );
+db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"INSERT INTO " + "entries " +
+"(date, appname, appversion, "
++ "sentence, observation, " 
++ "observationextra, feelingok, "
++ "feelingnotok, "
++ "feelingcustom, "
++ "need, "
++ "needcustom, "
++ "request, "
++ "requestextra, "
++ "free1, "
++ "free2, "
++ "free3) VALUES ("
++ "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);",
+[ new Date(), appName, appVersion,
+getSentence(),
+selectedValue(form1.selectobservation),
+form1.inputobservation.value, 
+selectedValue(form1.selectfeeling), 
+selectedValue(form1.selectfeeling2), 
+form1.inputfeeling.value,  
+selectedValue(form1.selectneed), 
+form1.inputneed.value, 
+selectedValue(form1.selectrequest),
+form1.inputrequest.value,
+'',
+'',
+''],
+function() {},
+errorHandler);
+      }
+  );            
+}
+
+function deleteLogEntry(rowid)
+{
+  if (! confirm('Delete: ' + rowid +' ?'))
+     return;
+db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"DELETE FROM " + "entries " +
+"WHERE id = ?; ",
+[ rowid ],
+function() {},
+errorHandler);
+      }
+  ); 
+/* return strReturn; komt hier nooit */
+}
+
+function mailLogBook()
+{
+strLog = 'id, '
++"date, appname, appversion, "
++ "sentence, observation, " 
++ "observationextra, feelingok, "
++ "feelingnotok, "
++ "feelingcustom, "
++ "need, "
++ "needcustom, "
++ "request, "
++ "requestextra, "
++ "free1, "
++ "free2, "
++ "free3 "
+db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"SELECT " + strLog+ " FROM " + "entries " +
+/* "WHERE date <= ? " + */
+"ORDER BY id DESC;",
+[ /* new Date() */ ],
+function(transaction, result) {
+  for (var i=0; i < result.rows.length; i++)
+  {
+var row = result.rows.item(i);
+strLog = strLog + '<br>' +
+row.id + ",'" + row.date + "','" + row.appname + "','" + row.appversion + "','" +  
+row.sentence + "','" +  row.observation + "','" +  row.observationextra + "','" +  row.feelingok + "','" +  row.feelingnotok + "','" +  row.feelingcustom + "','" +  row.need + "','" +  row.needcustom + "','" +  row.request + "','" +  row.requestextra + "','" +  row.free1 + "','" +  row.free2 + "','" +  row.free3 + "'";
+}
+alert(strLog);
+location.href=getMailToLogBook(strLog);
+},
+errorHandler);
+      }
+  ); 
+/* return strReturn; komt hier nooit */          
+}
+
+function selectLogEntry(rowid)
+{
+  if (! confirm('Select: ' + rowid +', and overwrite current ?'))
+     return;
+strLog = '';
+db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"SELECT * FROM " + "entries " +
+"WHERE id = ? " + 
+"ORDER BY id DESC;",
+[ rowid ],
+function(transaction, result) {
+  for (var i=0; i < result.rows.length; i++)
+  {
+var row = result.rows.item(i);
+setinput(form1.inputobservation,row.observationextra);
+setselect(form1.selectobservation,row.observation);
+setinput(form1.inputfeeling,row.feelingcustom);
+setselect(form1.selectfeeling,row.feelingok);
+setselect(form1.selectfeeling2,row.feelingnotok);
+setinput(form1.inputneed,row.needcustom);
+setselect(form1.selectneed,row.need);
+setinput(form1.inputrequest,row.requestextra);
+setselect(form1.selectrequest,row.request);
+}
+selectedRow=row;
+go(2);
+},
+errorHandler);
+      }
+  ); 
+/* return strReturn; komt hier nooit */          
+}
+
+function logShow()
+{
+strLog = '';
+db.transaction(
+    function(transaction) { 
+       transaction.executeSql(
+"SELECT * FROM " + "entries " +
+/* "WHERE date <= ? " + */
+"ORDER BY id DESC;",
+[ /* new Date() */ ],
+function(transaction, result) {
+  for (var i=0; i < result.rows.length; i++)
+  {
+var row = result.rows.item(i);
+strLog = strLog + '<br>' +
+"<li class=controlBottom style='font-size: 75%' onClick='deleteLogEntry("+row.id+")'>Del</li>" +
+((new Date(row.date)).getDate()) + '-' +   
+((new Date(row.date)).getMonth()+1) 
++ '-' + ((new Date(row.date)).getFullYear())           
++' ('+row.id + ')' + '<br>'
++"<div onClick='selectLogEntry("+row.id+")'>"
++row.sentence
++"</div>";
+}
+document.getElementById('foo').innerHTML = 
+''
+/*+"Logboek is nog in ontwikkeling" */
+/*+'<textarea name="log" rows="20" cols="48">' */
++strLog
++"<br/><li class=controlApp style='font-size: 60%;float: right' onClick='mailLogBook()'>Mail All</li> <br/>"
+/*+'</textarea>' */;
+},
+errorHandler);
+      }
+  ); 
+/* return strReturn; komt hier nooit */           
+}
+
+function errorHandler(transaction, error)
+{
+  alert('Oops. Error was ' 
++ error.message
++ ' Code ' + error.code);
+return true;  
+}
+
+function saveState()
+{
+   previousState = state;
+}
+
+function displayElement(element)
+{
+   element.style.display = "inline"; 
+}
+
+function hideElement(element)
+{
+   element.style.display = "none";
+}
+
+function hideState(state)
+{
+switch (state)
+   {
+case "Prep":
+{
+hideElement(document.getElementById('Prepbody'));
+hideElement(form1.selecttimeframe);
+hideElement(form1.selectrelationship);
+hideElement(form1.selectcomplexity);
+hideElement(form1.inputpersonname);
+}
+break;
+case "Jack":
+{
+hideElement(document.getElementById('Jackbody'));
+hideElement(form1.inputjackal);
+}
+break;
+case "Gira":
+{
+hideElement(document.getElementById('Girabody'));
+hideElement(form1.inputgiraffe);
+}
+break;    
+case "O":
+{
+hideElement(document.getElementById('Obody'));
+hideElement(form1.selectobservation);
+hideElement(form1.inputobservation);
+}
+break; 
+case "F1":
+{
+hideElement(document.getElementById('Fbody'));
+hideElement(form1.selectfeeling);
+hideElement(form1.inputfeeling);
+hideElement(form1.selectfeeling2);
+hideElement(document.getElementById('buttonFeeling1'));
+hideElement(document.getElementById('buttonFeeling2'));
+}
+break; 
+case "F2":
+{
+hideElement(document.getElementById('Fbody'));
+hideElement(form1.selectfeeling);
+hideElement(form1.inputfeeling);
+hideElement(form1.selectfeeling2);
+hideElement(document.getElementById('buttonFeeling1'));
+hideElement(document.getElementById('buttonFeeling2'));
+}
+break;
+case "N":
+{
+hideElement(document.getElementById('Nbody'));
+hideElement(form1.selectneed);
+hideElement(form1.inputneed);
+}
+break; 
+case "R":
+{
+hideElement(document.getElementById('Rbody'));
+hideElement(form1.inputrequest);
+hideElement(form1.selectrequest);
+}
+break;
+case "J":
+{
+hideElement(document.getElementById('Jbody'));
+hideElement(form1.selectjudgement);
+hideElement(form1.inputjudgement);
+}
+break; 
+case "L":
+{
+document.getElementById('footer').style.position = "absolute"; 
+}
+break;
+case "?":
+{
+document.getElementById('footer').style.position = "absolute"; 
+}
+break;
+case "S":
+{
+hideElement(document.getElementById('addThis'));
+}
+break;
+default:
+break;
+}
+}
+
+function hideStateElements()
+{
+   hideState(state);
+}
+
+function go(type)
+{
+   saveState();
+   hideStateElements();
+   switch (type)
+   {
+case 1:
+{
+state = "M";
+indexMode = (indexMode % nrOfModes) + 1;
+document.getElementById('foo').innerHTML = modes[startModes+indexMode];
+document.getElementById('foo').style.background = "white";
+}
+break;
+case 2:
+{
+state = "O";
+displayElement(document.getElementById('Obody'));
+displayElement(form1.selectobservation);
+displayElement(form1.inputobservation);
+    if (state  
+         == previousState) 
+{      indexWaarneming = (indexWaarneming % nrOfObservations) + 1;
+setselect(form1.selectobservation,observations[startObservations+indexWaarneming]);
+}
+    if ("?"   
+         == previousState) 
+{      indexWaarneming = 0;
+}
+ 
+document.getElementById('foo').innerHTML = formatFooString(observations[startObservations+indexWaarneming]);
+document.getElementById('foo').style.background = "rgba(255,255,0,0.7)"; 
+}
+break;
+case 3:
+{
+state = "F1";
+displayElement(document.getElementById('Fbody'));
+displayElement(form1.selectfeeling);
+displayElement(form1.inputfeeling);
+displayElement(form1.selectfeeling2);
+displayElement(document.getElementById('buttonFeeling1'));
+displayElement(document.getElementById('buttonFeeling2'));
+    if (state  
+         == previousState) 
+{indexGevoel = (indexGevoel % nrOfFeelings) + 1;
+setselect(form1.selectfeeling,feelings[startFeelings+indexGevoel]);
+}
+    if ("?"   
+         == previousState) 
+{      indexGevoel = 0;
+}
+ 
+document.getElementById('foo').innerHTML = formatFooString(feelings[startFeelings+indexGevoel]);
+document.getElementById('foo').style.background = "pink"; 
+}
+break;
+case 4:
+{
+state = "N";
+displayElement(document.getElementById('Nbody'));
+displayElement(form1.selectneed);
+displayElement(form1.inputneed);
+    if (state  
+         == previousState) 
+{indexBehoefte = (indexBehoefte % nrOfNeeds) + 1;
+setselect(form1.selectneed,needs[startNeeds+indexBehoefte]);
+}
+if ("?"  == previousState) 
+{      indexBehoefte = 0;
+}
+document.getElementById('foo').innerHTML = formatFooString(needs[startNeeds+indexBehoefte]);
+document.getElementById('foo').style.background = "rgba(0,255,255,0.5)";
+}
+break;
+case 5:
+{
+state = "R";
+displayElement(document.getElementById('Rbody'));
+displayElement(form1.inputrequest);
+displayElement(form1.selectrequest);
+    if (state  
+         == previousState) 
+{indexVerzoek = (indexVerzoek % nrOfRequests) + 1;
+setselect(form1.selectrequest,requests[startRequests+indexVerzoek]);
+}
+if ("?"  == previousState) 
+{      indexVerzoek = 0;
+}
+document.getElementById('foo').innerHTML = formatFooString(requests[startRequests+indexVerzoek]); 
+document.getElementById('foo').style.background = "rgba(0,255,0,0.6)";
+}
+break;
+case 6:
+{
+state = "F2";
+displayElement(document.getElementById('Fbody'));
+displayElement(form1.selectfeeling);
+displayElement(form1.inputfeeling);
+displayElement(form1.selectfeeling2);
+displayElement(document.getElementById('buttonFeeling1'));
+displayElement(document.getElementById('buttonFeeling2'));
+    if (state  
+         == previousState) 
+{indexGevoel2 = (indexGevoel2 % nrOfFeelings2) + 1;
+setselect(form1.selectfeeling2,feelings2[startFeelings2+indexGevoel2]);
+}
+if ("?"  == previousState) 
+{      indexGevoel2 = 0;
+}
+document.getElementById('foo').innerHTML = formatFooString(feelings2[startFeelings2+indexGevoel2]);
+document.getElementById('foo').style.background = "pink";
+}
+break;
+case 7:
+{
+state = "A";
+document.getElementById('foo').innerHTML = "Free apps for any browser based/internet connected device: <a class='controlApp' href='http://www.vitaliserendcommuniceren.nl/iVCBalansCheck.html'>iVCBalans Check app(NL)</a><a class='controlApp' href='http://www.vitaliserendcommuniceren.nl/i4ring.html'>i4ring app(NL)</a><a class='controlApp' href='http://www.vitaliserendcommuniceren.nl/iai-opener.html'>iaiopener  app(NL)</a><a class='controlApp' href='http://www.vitaliserendcommuniceren.nl/i4ringEng.html'>i4ring app(EN)</a><a class='controlApp' href='http://www.vitaliserendcommuniceren.nl/iai-openerEnglish.html'>iaiopener app(EN)</a>More languages (DE, FR) <br/>platforms (Android, Desktop)  <br/>NVC apps (Dance Floors) coming soon ... See our <a style='color: blue; text-decoration: underline'  href='http://www.vitaliserendcommuniceren.nl/school/tools.html'>Tools website</a>";
+document.getElementById('foo').style.background = "white";
+}
+break;
+case 8:
+{
+state = "L";
+logShow();
+/*document.getElementById('foo').innerHTML = "Logboek is nog in ontwikkeling"+strLog; */
+document.getElementById('foo').style.background = "white";
+document.getElementById('footer').style.position = "static";
+}
+break;
+case 9:
+{
+state = "?";
+document.getElementById('foo').innerHTML = getInfo();
+document.getElementById('foo').style.background = "white";
+document.getElementById('footer').style.position = "static";
+}
+break;
+case 10:
+{
+state = "S";
+  logSentence();
+setAddThisShare();
+document.getElementById('foo').innerHTML = getSavedPage();
+document.getElementById('foo').style.background = "white";
+displayElement(document.getElementById('addThis'));
+}
+break;
+case 11:
+{
+state = "J";
+displayElement(document.getElementById('Jbody'));
+displayElement(form1.selectjudgement);
+displayElement(form1.inputjudgement);
+    if (state  
+         == previousState) 
+{indexOordeel = (indexOordeel % nrOfJudgements) + 1;
+setselect(form1.selectjudgement,judgements[startJudgements+indexOordeel]);
+}
+if ("?"  == previousState) 
+{      indexOordeel = 0;
+}
+document.getElementById('foo').innerHTML = formatFooString(judgements[startJudgements+indexOordeel]); 
+document.getElementById('foo').style.background = "rgb(230,230,230)";
+}
+break;
+case 12:
+{
+state = "Prep";
+displayElement(document.getElementById('Prepbody'));
+displayElement(form1.selecttimeframe);
+displayElement(form1.inputpersonname);
+displayElement(form1.selectrelationship);
+displayElement(form1.selectcomplexity);
+document.getElementById('foo').innerHTML = formatFooString(prepares[0]); 
+document.getElementById('foo').style.background = "rgb(230,230,230)";
+}
+break;
+case 13:
+{
+state = "Jack";
+displayElement(document.getElementById('Jackbody'));
+displayElement(form1.inputjackal);
+document.getElementById('foo').innerHTML = formatFooString(jackals[0]); 
+document.getElementById('foo').style.background = "rgb(230,230,230)";
+}
+break;
+case 14:
+{
+state = "Gira";
+displayElement(document.getElementById('Girabody'));
+displayElement(form1.inputgiraffe);
+document.getElementById('foo').innerHTML = formatFooString(giraffes[0]); 
+document.getElementById('foo').style.background = "rgb(230,230,230)";
+}
+break;
+default:
+break;
+}
+}
+
+function isSafari()
+{
+   var agent=navigator.userAgent.toLowerCase();
+   var vendor=navigator.platform.toLowerCase();
+   return ((agent.indexOf('iphone')!=-1)) || ((vendor.indexOf('mac')!=-1));
+
+}
+
+function getSpanControlWithMargin()
+{
+   var agent=navigator.userAgent.toLowerCase();
+   var vendor=navigator.platform.toLowerCase();
+   var is_safari = ((agent.indexOf('iphone')!=-1)) || ((vendor.indexOf('mac')!=-1));
+
+/*    if(navigator.appName == "Microsoft Internet Explorer")*/ 
+   if (isSafari())
+      return ("<span class='control' style='margin: -3px 0'>")
+   else
+      return ("<span class='control' style='margin: -30px 0'>");
+}
+
+function getTurnOffLastOnClick()
+{
+   var agent=navigator.userAgent.toLowerCase();
+   var vendor=navigator.platform.toLowerCase();
+   var is_safari = ((agent.indexOf('iphone')!=-1)) || ((vendor.indexOf('mac')!=-1));
+
+/*    if(navigator.appName == "Microsoft Internet Explorer")*/ 
+   if (isSafari())
+      return ("")
+   else
+      return ("<li onclick='void(0)'></li>");
+}
+
+function initDivFooter()
+{
+ var strReturn =  "<div id='footer' style='font-size: 100%;position: absolute;"; 
+/* var strReturn =  "<div style='font-size: 100%;"; for log */
+if ((lokatie() == 'internet') || (lokatie() == 'android'))
+{
+strReturn = strReturn + "bottom: 0%' "
+}
+else
+{
+strReturn = strReturn + "bottom: 20px' ";
+}
+strReturn = strReturn+" id=footer>";
+return strReturn;
+}
+
+</script>
+<style>
+body {
+margin: 0;
+padding: 0;
+width: 320px;
+/* Comic Ms */
+/* font-family: Helvetica, sans-serif; */
+font-family: Palatino, sans-serif;
+font-size: 14px;
+/* font-size: 17px; */
+-webkit-text-size-adjust: none; 
+background-color: white;
+}
+ul {
+margin: 0;
+padding: 0;
+width: 320px;
+background-color: white;
+}
+li {
+font-size: 20px;
+font-weight: bold;
+list-style-type: none;
+border-bottom: 1px solid #d9d9d9;
+padding: 12px;
+}
+.secondary {
+font-weight: normal;
+}
+
+.control {
+margin: -3px 0;
+/* for internet explorer -30, for iphone -3 */
+/* margin: -3px 0;*/
+width: 40px; 
+/* for control width that varies according to text length, use the following instead of width: 60px */
+/* padding: 0 8px 0 8px; */
+font-size: 12px;
+color: white;
+background-color: #4c566c;
+-webkit-border-radius: 5px;
+float: right;  
+text-align: center;
+line-height: 29px;
+}
+
+.controlApp {
+margin: 8px 8px;
+/* for internet explorer -30, for iphone -3 */
+/* margin: -3px 0;*/
+width: 66px; 
+/* for control width that varies according to text length, use the following instead of width: 60px */
+padding: 0 8px 0 15px; 
+font-size: 12px;
+color: white;
+background-color: #4c566c;
+-webkit-border-radius: 5px;
+float: left;  
+text-align: center;
+line-height: 29px;
+}
+
+.controlTop {
+margin: -3px 0;
+/* for internet explorer -30, for iphone -3 */
+/* margin: -3px 0;*/
+width: 40px; 
+/* for control width that varies according to text length, use the following instead of width: 60px */
+/* padding: 0 8px 0 8px; */
+/* font-size: 12px; */
+font-size: 100%;
+color: black;
+/* text-shadow: rgba(255,255,255,0.9) 0px -2px 2px; */
+text-shadow: 0px 1px 1px #fff;
+background-color: #4c566c;
+-webkit-border-radius: 5px;
+float: left;  
+text-align: center;
+line-height: 29px;
+}
+
+.controlMiddle {
+margin: -3px 0;
+/* for internet explorer -30, for iphone -3 */
+/* margin: -3px 0;*/
+width: 100px;  
+/* for control width that varies according to text length, use the following instead of width: 60px */
+padding: 0 8px 0 8px;  
+/* font-size: 12px; */
+font-size: 100%;
+color: pink;
+/* text-shadow: rgba(255,255,255,0.9) 0px -2px 2px; */
+text-shadow: 0px 1px 1px #fff;
+background-color: #4c566c;
+-webkit-border-radius: 5px;
+float: left;  
+text-align: center;
+line-height: 29px;
+}
+
+.controlBottom {
+margin: -3px 0;
+/* for internet explorer -30, for iphone -3 */
+/* margin: -3px 0;*/
+width: 40px; 
+/* for control width that varies according to text length, use the following instead of width: 60px */
+/* padding: 0 8px 0 8px; */ 
+/* font-size: 12px; */
+font-size: 100%;
+color: white;
+background-color: rgba(50,50,50,0.8) /* black+10 */;
+/* back-ground-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999); */
+-webkit-border-radius: 5px;
+float: left;  
+text-align: center;
+text-shadow: 0px 1px 1px #fff;
+line-height: 29px;
+}
+
+a {
+text-decoration: none;
+color: white;
+}
+
+div.body
+{
+  background-color: white;
+}
+
+select
+{
+/* padding: 2px 2px 2px 2px; */
+/* line-height: 25px; */
+text-align: center;
+}
+
+select.option
+{
+margin: 2px 2px 2px 2px;
+color: red;
+font-size: 150%;
+line-height: 20px;
+text-align: center;
+}
+
+
+</style>
+</head>
+<body>
+<div id="modeSection">
+</div>
+<ul>
+<div id="prepareButtons">
+<li id="PrepButton" class=controlTop style="background: rgb(200,100,255); display: none" onClick="go(12)">
+<!--"violet"-->
+<script language="javascript" type="text/javascript">
+document.write(getPrepareButtonText());
+</script>
+</li>
+ <li id="JackButton" class=controlTop style="background: rgb(255,50,50); display: none" onClick="go(13)">
+<!--"red"-->
+<script language="javascript" type="text/javascript">
+document.write(getJackalButtonText());
+</script>
+</li>
+ <li id="GiraButton" class=controlTop style="background: rgb(50,255,50); display: none" onClick="go(14)">
+<!--"green"-->
+<script language="javascript" type="text/javascript">
+document.write(getGiraffeButtonText());
+</script>
+</li>
+</div>
+<div id="OFNRButtons">
+<li id="JButton" class=controlTop style="background: rgb(210,210,210); display: none" onClick="go(11)">
+<!--"grey"-->
+<script language="javascript" type="text/javascript">
+document.write(getJudgementButtonText());
+</script>
+</li> 
+<li id="OButton" class=controlTop style="background: rgb(255,255,0)" onClick="go(2)">
+<!--"yellow"-->
+<script language="javascript" type="text/javascript">
+document.write(getObservationButtonText());
+</script>
+</li>
+<li id="FButton" class=controlTop style="background: pink" onClick="go(6)">
+<script language="javascript" type="text/javascript">
+document.write(getFeelingButtonText());
+</script>
+</li>
+<li id="NButton" class=controlTop style="background: rgb(0,255,255)" onClick="go(4)">
+<!--"aqua" of (light)skyblue ?-->
+<script language="javascript" type="text/javascript">
+document.write(getNeedButtonText());
+</script>
+</li>
+<li id="RButton" class=controlTop style="background: rgba(0,255,0,0.7)" onClick="go(5)">
+<!--"lime" -->
+<script language="javascript" type="text/javascript">
+document.write(getRequestButtonText());
+</script>
+</li>
+<li id="SButton" class=controlTop style="background: rgb(199,0,255)" onClick="go(10)">
+<!--"darkviolet:rgba(148,0,211,0.5)" -->
+Save
+</li>
+</div><!-- OFNRButtons -->
+</h1 id="addThis">
+</ul>
+<script language="javascript" type="text/javascript">
+document.write(getTurnOffLastOnClick());
+</script>
+
+<form name="form1" action="javascript:void(0)">
+<div class="body">
+<h1 style="font-size: 125%" id="foo" > 
+<script language="javascript" type="text/javascript">
+document.write(getHelp());
+</script>
+<!-- audio src='http://www.scottandrew.com/mp3/demos/holding_back_demo_011504.mp3' controls>
+Your browser does not support the audioplayer.
+</audio>
+<audio src='test.mp3' controls>
+Your browser does not support the videoplayer.
+</audio>
+<video src='http://www.vitaliserendcommuniceren.nl/dev/xfactor.mp4' controls>
+Your browser does not support the videoplayer.
+</video -->
+</h1>
+</div> <!-- class="body" -->
+<div id="Prepbody" class="body" style= "display: none" >
+<script language="javascript" type="text/javascript">
+document.write(getPrepbodyImg());
+</script>
+<select class="select" name="selectcomplexity" style="visibility: visible; display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getComplexityUndefinedText())); 
+document.write(initselect(complexities));
+</script>
+</select>
+<select class="select" name="selecttimeframe" style="visibility: visible; display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getTimeframeUndefinedText())); 
+document.write(initselect(timeframes));
+</script>
+</select>
+<script language="javascript" type="text/javascript">
+document.write(getNameUndefinedText())); 
+</script>
+<input type=text style="visibility: visible; display: none" name=inputpersonname value="[name]">
+<select class="select" name="selectrelationship" style="visibility: visible; display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getRelationshipUndefinedText())); 
+document.write(initselect(relationships));
+</script>
+</select>
+</div> <!-- class="body" -->
+<div id="Jackbody" class="body" style= "display: none" >
+<img src="jackal.jpg" onClick="go(13)" >
+<input type=text style="visibility: visible; display: none" name=inputjackal value="...">
+</div> <!-- class="body" -->
+<div id="Girabody" class="body" style= "display: none" >
+<img src="giraffe.jpg" onClick="go(14)" >
+<input type=text style="visibility: visible; display: none" name=inputgiraffe value="...">
+</div> <!-- class="body" -->
+<div id="Obody" class="body" style= "display: none" >
+<img src="Beobachtung90x60.gif" onClick="go(2)" >
+<select class="select" name="selectobservation" style="visibility: visible; display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getObservationUndefinedText())); 
+document.write(initselect(observations));
+</script>
+</select>
+<input type=text style="visibility: visible; display: none" name=inputobservation value="...">
+</div> <!-- class="body" -->
+<div id="Fbody" class="body">
+<img src="Gefuehl90x60.gif" style="display: none" onClick="go(3)">
+<table>
+<tr>
+<td id="buttonFeeling2" style="display: none" class=controlMiddle style="background: pink" onClick="go(6)">
+<img src="smileymad.png">
+</td>
+<td id="buttonFeeling1" style="display: none" class=controlMiddle style="background: pink" onClick="go(3)">
+<img src="smileysatisfied.png">
+</td>
+</tr>
+<tr>
+<td>
+<select name="selectfeeling2" style="visibility: visible;display: none;float: right">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getFeelingNotOkUndefinedText()));
+document.write(initselect(feelingsNotOkDetails));
+</script>
+</select>
+</td>
+<td>
+<select name="selectfeeling" style="display: none" >
+<script language="javascript" type="text/javascript">
+document.write(initoption(getFeelingOkUndefinedText())); 
+document.write(initselect(feelingsOkDetails));
+</script>
+</select>
+</td>
+</tr>
+<tr>
+<td>
+ <input name=inputfeeling style="display: none" value="">
+</td>
+</tr>
+</table>
+</div> <!-- body -->
+<div id="Nbody" class="body" style= "display: none" >
+<img src="Beduerfnis90x60.gif" onClick="go(4)"> 
+<select name="selectneed" style="display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getNeedUndefinedText())); 
+document.write(initselect(needsDetails));
+</script>
+</select>
+ <input name=inputneed style="display: none" value="">
+</div> <!-- class="body" -->
+<div id="Rbody" class="body" style= "display: none" >
+<img src="Bitte90x60.gif" onClick="go(5)">
+<select name="selectrequest" style="visibility: visible;display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getRequestUndefinedText())); 
+document.write(initselect(requests));
+</script>
+</select>
+<input name=inputrequest style="display: none" value="">
+</div> <!-- class="body" -->
+<div id="Jbody" class="body" style= "display: none" >
+<img src="Judgement80x80.png" onClick="go(11)"> 
+<select name="selectjudgement" style="display: none">
+<script language="javascript" type="text/javascript">
+document.write(initoption(getJudgementUndefinedText())); 
+document.write(initselect(judgementsDetails));
+</script>
+</select>
+ <input name=inputjudgement style="display: none" value="">
+</div> <!-- class="body" -->
+<h1 id="addThis" style="display: none"> 
+<!-- ADDTHIS BUTTON BEGIN -->
+<!-- div class="addthis_toolbox addthis_default_style  addthis_32x32_style">
+<a class="addthis_button_twitter"></a>
+<a class="addthis_button_linkedin"></a>
+< a class="addthis_button_email"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#async=1"></script -->
+<!-- AddThis Button END -->
+<h1 style="font-size: 125%;background: white;width: 320 px;text-overflow: hidden" id="sentence" >
+</h1>
+</form>
+<script language="javascript" type="text/javascript">
+document.write(initDivFooter());
+</script>
+<ul>
+<li class=controlBottom style="font-size: 100%" onClick="go(1)">
+<script language="javascript" type="text/javascript">
+document.write(getNVCButtonText());
+</script>
+</li><li  class=controlBottom  onclick="javascript:location.href=getMailTo()">
+Mail
+</li>
+<li class=controlBottom style="font-size: 100%" onClick="go(8)">
+Log
+</li>
+<li class=controlBottom style="font-size: 100%" onClick="go(7)">
+Apps
+</li>
+<li class=controlBottom style="font-size: 100%" onClick="go(9)">
+?
+</li>
+</div> <!-- footer -->
+</ul>
+<script type="text/javascript">
+finishInitHtmlNVCapp(); </script>
+<!-- OPENTRACKER HTML START -->
+<script type="text/javascript">otgoal="gccheckin.sold"; otclv="1.59"; </script>
+<script src="http://script.opentracker.net/?site=www.vitaliserendcommuniceren.nl"></script><noscript><a href="http://www.opentracker.net" target="_blank"><img src="http://img.opentracker.net/?cmd=nojs&site=www.vitaliserendcommuniceren.nl" alt="web stats" border="0"></a></noscript>
+<!-- OPENTRACKER HTML EINDE -->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
