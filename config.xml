@@ -1,11 +1,11 @@
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="nl.iconsultancy.iNVCcheckin" version="1.62">
-  <name>NVC Check-In</name>
-  <description>NVC Check In app that supports the use and spread of NVC</description>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="nl.iconsultancy.icheckinNVC" version="1.63">
+  <name>CNV Check-In</name>
+  <description>French NVC Check In app that supports the use and spread of NVC</description>
   <author href="http://www.vitaliserendcommuniceren.nl/school/tools.html" email="apps@iconsultancy.nl">iConsultancy (Martijn Ceelen)</author>
   <content src="index.html"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="14"/>
-  <preference name="target-device" value="handset" />
+  <!-- preference name="target-device" value="handset" /-->
   <!-- plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1"/>
   <plugin name="cordova-plugin-camera" source="npm" spec="~2.1.1"/>
   <plugin name="cordova-plugin-media-capture" source="npm" spec="~1.2.0"/>
@@ -26,7 +26,7 @@
   <plugin name="cordova-plugin-statusbar" source="npm" spec="~2.1.2"/>
   <plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0"/>
   <plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1"/ -->
-  <icon src="iNVCCheckInNVCen.png"/>
+  <icon src="iNVCCheckInNVCfr.png"/>
   <gap:splash src="SplashWelcome.png"/>
   <!-- platform name="android">
     <icon src="www/res/icon/android/drawable-ldpi-icon.png" density="ldpi"/>
