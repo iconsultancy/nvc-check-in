@@ -32,14 +32,15 @@ function delay(msecs)
 */
 }
 
-delay(6*1000); /* Moved here, as first step, to show startup screen longer */
+/* delay(6*1000); */ 
+/* Version 1.63 Moving here, as first step, to show startup screen longer, does not help */
 
 window.open;
 window.scrollTo(0,0);
 resizeTo(320+35,480+135);
 
 var author="Martijn Ceelen";
-var appVersion="1.62";
+var appVersion="1.63";
 var db = openDatabase("iNVCdb", "1.0", "iNVCDatabase", 65536);
 var strLog ='';
 var DFReferenceVersion = false;
@@ -149,7 +150,7 @@ else /* Mobiel */
 function initNVCapp()
 {
 checkLocation();
-/* NEW moved to top of file: delay(6*1000); */
+/* version 1.63 NEW moved to top of file: delay(6*1000); and after that removed at all */
 setTimeout("scrollNu()", /* 500 */ 0  ); 
 }
 
