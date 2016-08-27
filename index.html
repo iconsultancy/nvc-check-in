@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>NVC Check-In.... (1.62en test, coming soon to the App store!)</title>
+<title>NVC Check-In.... (1.63de test, coming soon to the App store!)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 
@@ -14,23 +14,44 @@ charset="utf-8"></script>
 
 <script language="javascript" type="text/javascript">
 
+function delay(msecs)
+{
+    var today = new Date();
+    var initialTime = today.getTime();
+    // alert(initialTime);
+    for (currentTime=initialTime;
+          (currentTime < 
+             initialTime+msecs);
+          currentTime=
+             (new Date ()).getTime());
+
+    // alert(currentTime-initialTime);
+//   for (i=1;i<(msecs/25)*10000;i++);
+/*    alert("delay 25s=10Mincs, "+
+            "beter via time passed check");
+*/
+}
+
+/* delay(6*1000); */ 
+/* Version 1.63 Moving here, as first step, to show startup screen longer, does not help */
+
 window.open;
 window.scrollTo(0,0);
 resizeTo(320+35,480+135);
 
 var author="Martijn Ceelen";
-var appVersion="1.62";
+var appVersion="1.63";
 var db = openDatabase("iNVCdb", "1.0", "iNVCDatabase", 65536);
 var strLog ='';
 var DFReferenceVersion = false;
 var DFAssistedVersion = false;
 </script>
 
-<link rel="apple-touch-icon" href="iNVCCheckInNVCen.png" />
+<link rel="apple-touch-icon" href="iNVCCheckInNVCde.png" />
 
-<link rel="apple-touch-icon-precomposed" href="iNVCCheckInNVCen.png" />
+<link rel="apple-touch-icon-precomposed" href="iNVCCheckInNVCde.png" />
 
-<script src="NVCen.js" type="text/javascript" 
+<script src="NVCdeUTF8.js" type="text/javascript" 
 charset="utf-8"></script>
 <!--script src="DFSEen.js" type="text/javascript"></script>
 <script src="DF.js" type="text/javascript"></script-->
@@ -126,29 +147,10 @@ else /* Mobiel */
 }
 }
 
-function delay(msecs)
-{
-    var today = new Date();
-    var initialTime = today.getTime();
-    // alert(initialTime);
-    for (currentTime=initialTime;
-          (currentTime < 
-             initialTime+msecs);
-          currentTime=
-             (new Date ()).getTime());
-
-    // alert(currentTime-initialTime);
-//   for (i=1;i<(msecs/25)*10000;i++);
-/*    alert("delay 25s=10Mincs, "+
-            "beter via time passed check");
-*/
-}
-
-
 function initNVCapp()
 {
 checkLocation();
-delay(6*1000);
+/* version 1.63 NEW moved to top of file: delay(6*1000); and after that removed at all */
 setTimeout("scrollNu()", /* 500 */ 0  ); 
 }
 
