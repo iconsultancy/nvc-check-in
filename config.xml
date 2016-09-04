@@ -1,7 +1,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="nl.iconsultancy.iNVCDialogue" version="1.63">
   <name>NVC Dialogue</name>
   <description>NVC Dialogue app that supports the use and spread of NVC and NVC Dancefloors</description>
-  <author href="http://www.vitaliserendcommuniceren.nl/school/tools.html" email="apps@iconsultancy.nl">iConsultancy (Martijn Ceelen) & Bridget Belgrave</author>
+  <author href="http://www.vitaliserendcommuniceren.nl/school/tools.html" email="apps@iconsultancy.nl">iConsultancy (Martijn Ceelen) and Bridget Belgrave</author>
   <content src="index.html"/>
   <preference name="DisallowOverscroll" value="true"/>
   <preference name="android-minSdkVersion" value="14"/>
@@ -26,7 +26,7 @@
   <plugin name="cordova-plugin-statusbar" source="npm" spec="~2.1.2"/>
   <plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0"/>
   <plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1"/ -->
-  <icon src="iNVCDialogue.png"/>
+  <icon src="iNVCCheckInNVCde.png"/>
   <gap:splash src="SplashWelcome.png"/>
   <!-- platform name="android">
     <icon src="www/res/icon/android/drawable-ldpi-icon.png" density="ldpi"/>
