@@ -577,6 +577,7 @@ function getHelp()
 + 'Ready to connect<li style="height: 18px;border: 0">with empathy and honesty?</li>'
 /*+'<br/>'
 + '<br/>' */
++'<div style="height: 100px; margin 20px;">' /* added for version 1.63 */
 +'<li id="welcomeButton" style="width: 50px;margin: 30px 20px 30px 25px;float: left;" onClick="gogo()"'
 +'><div id="welcomeButtonText" style="float: center;">'
 +'Dance'
@@ -592,7 +593,8 @@ function getHelp()
 		+'Info'
 		+"<!-- div id='welcomeButtonImage'><img src='info.png'></img--></div>"
 		+'</div>'
-		+'</li>';
+		+'</li>'
+		+'</div>'; /* added for version 1.63 */
 	}
 	else
 	{	
