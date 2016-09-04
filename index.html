@@ -47,7 +47,7 @@ $(document).bind('mobileinit',function(){
 window.open;
 window.scrollTo(0,0);
 /*resizeTo(320+35,480+135); */
-resizeTo(320,480); 
+/* resizeTo(320,480); removed for 1.63 */
 
 var author="Martijn Ceelen";
 var appVersion="1.60";
@@ -149,8 +149,8 @@ function checkLocation()
 if (lokatie() == 'internet')
 {
   if (location.href.indexOf('vitaliserend') == -1) 
-  alert('Please do not copy code from original site, contact ceelen@iconsultancy for use or distribution agreement');  
-}
+/*  alert('Please do not copy code from original site, contact ceelen@iconsultancy for use or distribution agreement');  
+Removed for 1.63 */}
 else /* Mobiel */
 {
 }
@@ -178,7 +178,7 @@ function delay(msecs)
 function initNVCapp()
 {
 checkLocation();
-delay(/* 6* */ 1000);
+/* delay(1000);  Removed for 1.63 */
 setTimeout("scrollNu()", /* 500 */ 0  ); 
 }
 
