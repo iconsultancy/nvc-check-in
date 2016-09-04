@@ -50,7 +50,7 @@ window.scrollTo(0,0);
 /* resizeTo(320,480); removed for 1.63 */
 
 var author="Martijn Ceelen";
-var appVersion="1.60";
+var appVersion="1.63";
 var db = openDatabase("iNVCdb", "1.0", "iNVCDatabase", 65536);
 var strLog ='';
 var DFReferenceVersion = false;
@@ -149,8 +149,10 @@ function checkLocation()
 if (lokatie() == 'internet')
 {
   if (location.href.indexOf('vitaliserend') == -1) 
-/*  alert('Please do not copy code from original site, contact ceelen@iconsultancy for use or distribution agreement');  
-Removed for 1.63 */}
+/*  alert('Please do not copy code from original site, contact ceelen@iconsultancy for use or distribution agreement')
+Removed for version 1.63 */
+;  
+}
 else /* Mobiel */
 {
 }
